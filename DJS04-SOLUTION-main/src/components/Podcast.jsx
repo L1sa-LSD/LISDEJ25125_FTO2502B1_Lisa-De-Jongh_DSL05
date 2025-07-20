@@ -8,16 +8,18 @@ import { useParams } from "react-router-dom";
  * @returns {string[]} Array of genre titles
  */
 function mapGenreIdsToTitles(ids, genres) {
-  return ids.map(id => {
-    // Try to find the genre in the local genres array
+  const names = ids.map(id => {
     const found = genres.find(g => g.id === id);
     if (found) return found.title; // If found, return the genre title
-    // Provide simple fallback names for some common unknown IDs
     if (id === 0) return "All"; // 0 is often used for 'All' genres
     if (id === 10) return "Featured"; // 10 might be used for 'Featured' genres
-    // Add more fallbacks here if needed
-    return "Other"; // For any other unknown genre, return 'Other'
-  });
+    return null; // Return null for truly unknown genres
+  }).filter(Boolean); // Remove nulls
+
+  // If no known genres, show a single 'Unknown Genre' tag
+  if (names.length === 0) return ["Unknown Genre"];
+  // Remove duplicates
+  return [...new Set(names)];
 }
 
 /**
