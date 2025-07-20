@@ -1,43 +1,23 @@
-# DJS04 – React Podcast App with Search, Sort, Filter & Pagination
+# DJS05 – React Podcast App with Dynamic Show Detail Page
 
-This project is a **React-based podcast browsing application** that allows users to explore podcasts using powerful features such as search, sort, filter by genre, and automatic pagination. It builds upon earlier solutions (DJS03) and introduces shared state management using the React Context API.
+This project is a **React-based podcast browsing application** that allows users to explore podcasts with advanced features: search, sort, filter by genre, pagination, and now dynamic show detail pages with season navigation. It demonstrates dynamic routing, state management, and responsive UI.
 
 ## Core Functionality
 
-- **Fetch Podcasts from API**
+- **Dynamic Routing & Show Detail Page**
+  - Each podcast card links to a unique detail page (`/podcast/:id`).
+  - The detail page fetches and displays all information for the selected show, including title, image, description, genres, last updated date, total seasons, and episodes.
+  - Season navigation allows users to switch between seasons and view episodes for each season.
+  - Handles loading, error, and empty states gracefully.
 
-  - Data is loaded from: `https://podcast-api.netlify.app/shows`
-  - Podcasts include metadata like title, updated date, genres, image, and seasons
+- **Preserved State**
+  - Search, filter, and pagination state are preserved when navigating back from a show detail page to the homepage.
 
-- **Search**
-
-  - Users can search podcasts by title
-  - Case-insensitive and dynamically updates the result list
-
-- **Sort**
-
-  - Sort options include:
-    - Default
-    - Newest (by updated date)
-    - Oldest
-    - Title A → Z
-    - Title Z → A
-
-- **Genre Filter**
-
-  - Podcasts can be filtered by genre using a dropdown
-  - All available genres are loaded from static data
-
-- **Pagination**
-
-  - The app dynamically adjusts how many podcast cards to show per page
-  - Uses screen width to compute optimal layout (e.g., 2 rows × n columns)
-  - Defaults to 10 items per page for tablet and smaller screens
-
-- **Shared State with Context API**
-  - Uses a `PodcastProvider` to manage global podcast state
-  - Exposes search term, sort key, selected genre, page, and filtered podcasts
-  - Components consume state via `usePodcasts()` or `PodcastContext`
+- **Search, Sort, Filter, Pagination**
+  - Search podcasts by title (case-insensitive, live update)
+  - Sort by newest, oldest, title (A→Z, Z→A), or default
+  - Filter by genre using a dropdown (genre mapping is local for fast lookup)
+  - Pagination adapts to screen size for optimal layout
 
 ## Project Structure
 
@@ -45,46 +25,68 @@ This project is a **React-based podcast browsing application** that allows users
 /src
 │
 ├── /api
-│ └── fetchPodcasts.js # Fetch podcasts from the API
+│   └── fetchPodcasts.js         # Fetch podcasts from the API
 │
 ├── /components
-│ ├── Header.jsx # Top navigation bar with controls
-│ ├── PodcastCard.jsx # Individual podcast preview card
-│ ├── PodcastGrid.jsx # Grid layout of podcast cards
+│   ├── Header.jsx               # Top navigation bar
+│   ├── PodcastCard.jsx          # Clickable podcast preview card (links to detail page)
+│   ├── PodcastGrid.jsx          # Grid layout of podcast cards
+│   ├── Podcast.jsx              # Podcast show detail page (dynamic, with season navigation)
+│   ├── Pagination.jsx           # Pagination controls
+│   ├── GenreFilter.jsx          # Genre filter dropdown
+│   ├── SearchBar.jsx            # Search input
+│   └── SortSelect.jsx           # Sort dropdown
 │
 ├── /context
-│ └── PodcastContext.jsx # React context for global podcast state
+│   └── PodcastContext.jsx       # React context for global podcast state
 │
 ├── /utils
-│ └── formatDate.js # Formats ISO date to readable format
+│   └── formatDate.js            # Formats ISO date to readable format
 │
-├── App.jsx # Root app component
-└── main.jsx # React entry point
+├── data.js                      # Static genre mapping
+├── App.jsx                      # Root app component (sets up routes)
+└── main.jsx                     # React entry point (wraps app in router)
 ```
 
-## How It Works
+## How the New Code Works
 
-- When the app loads, it fetches all podcast data once.
-- The data is passed into the `PodcastProvider`, which handles:
-  - Searching titles
-  - Sorting by selected key
-  - Filtering by genre
-  - Splitting into pages based on screen size
-- Components like `PodcastGrid` display the processed data.
+- **Routing:**
+  - The app uses `react-router-dom` for navigation.
+  - The homepage (`/`) lists all podcasts with search, sort, filter, and pagination.
+  - Clicking a podcast card navigates to `/podcast/:id`, showing the detail page for that show.
+
+- **Show Detail Page:**
+  - Fetches show data from `https://podcast-api.netlify.app/id/:id` using the ID from the URL.
+  - Displays all show details, genres (mapped from IDs), last updated date, and a list of seasons.
+  - Users can switch between seasons; episodes for the selected season are shown with episode number, title, image, and a shortened description.
+  - Handles loading, error, and empty states for a smooth user experience.
+
+- **State Preservation:**
+  - The homepage state (search, filter, pagination) is managed by React Context and is preserved when navigating back from a detail page.
 
 ## How to Run
 
-1. Clone the project or download the source code.
-2. Install dependencies using:
-
+1. Open a terminal and navigate to the project directory:
+   ```bash
+   cd "C:\Users\Lee-Ann\Downloads\last try\DJS04-SOLUTION-main"
+   ```
+2. Install dependencies:
    ```bash
    npm install
    ```
-
-3. Run the development server with:
-
+3. Start the development server:
    ```bash
    npm run dev
    ```
+4. Open [http://localhost:5173/](http://localhost:5173/) in your browser to view the app.
 
-4. Open http://localhost:5173 in your browser to view the app.
+## Features Demonstrated
+- Dynamic routing and data fetching by ID
+- Graceful loading and error handling
+- State management with React Context
+- Responsive, modern UI
+- Modular, well-documented code
+
+---
+
+**This project is a solution for DJS05: Show Detail Page with Routing and Navigation.**
